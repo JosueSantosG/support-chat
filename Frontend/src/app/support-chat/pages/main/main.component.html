@@ -1,0 +1,46 @@
+
+<div
+    class="flex items-center justify-center w-full h-screen py-12 md:py-24 lg:py-32"
+>
+    <div class="container mx-auto px-4 md:px-6">
+        <div
+            class="mx-auto max-w-lg text-center bg-[#1f2b3e] border shadow-lg rounded-lg px-5 py-24"
+        >
+            <h1 class="text-3xl font-bold sm:text-5xl md:text-6xl">
+                Chat de soporte en línea 🚀
+            </h1>
+            <p class="my-12 text-lg md:text-xl">
+                Obtén ayuda rápida y eficiente con nuestro chat online. Inicia
+                una conversación y resuelve tus dudas.
+            </p>
+            <form class="mt-8 gap-6">
+                <ul>
+                    <li>
+                        <label
+                            class="flex text-md font-medium md:text-xl"
+                            for="name"
+                        >
+                            Identifíquese:
+                        </label>
+                        <input
+                            class="mt-2 text-sm w-full rounded-md border p-3 shadow-lg"
+                            id="name"
+                            placeholder="Ingresa tu nombre"
+                            type="text"
+                        />
+                    </li>
+                    <li class="mt-4">
+                        <button
+                            class="w-full rounded-md py-3 px-4 text-lg font-medium shadow-lg border-transparent bg-slate-700 text-white hover:bg-slate-500 transition-colors duration-300"
+                            type="submit"
+                            (click)="joinRoom()"
+                            [routerLink]="['/welcome/chat']"
+                        >
+                            Iniciar Chat
+                        </button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
