@@ -1,47 +1,23 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import io from 'socket.io-client';
+import { env } from '../../../environments/environments';
+import { SocketioService } from './socketio.service';
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ChatService {
-  private socket:any;
-  private url = 'http://localhost:3333';
+    constructor(private http: HttpClient, private socket: SocketioService) {
+    }
 
-  constructor() {
-    /* this.socket = io(this.url, {transports: ['websocket', 'polling', 'flashsocket']}); */
 
-  }
 
-  joinRoom(room: string) {
-    this.socket.emit('joinRoom', room);
-  }
+    setUserName(userName: string) {
+        sessionStorage.setItem('userName', userName);
+    }
 
-  sendMessage(message: { user: string, room: string, message: string }) {
-    this.socket.emit('sendMessage', message);
-  }
-
-  getMessage(): Observable<{ user: string, message: string }> {
-    return new Observable(observer => {
-      this.socket.on('new message', (data:any) => {
-        observer.next(data);
-        console.log(data);
-        
-      });
-
-      return () => {
-        this.socket.disconnect();
-      }
-    });
-  }
-
-  getStorage() {
-    const storage: string = localStorage.getItem('chats')!;
-    return storage ? JSON.parse(storage) : [];
-  }
-
-  setStorage(data:any) {
-    localStorage.setItem('chats', JSON.stringify(data));
-  }
-  
+    getUserName(): string | null {
+        return sessionStorage.getItem('userName');
+    }
 }

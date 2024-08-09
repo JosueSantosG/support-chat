@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './pages/main/main.component';
 import { ViewChatComponent } from './components/cliente/view-chat/view-chat.component';
+import { myGuard } from '../guards/guard.guard';
 
 const routes: Routes = [
 	{
@@ -9,7 +10,7 @@ const routes: Routes = [
 		
 	},
 	{
-		path: 'chat', component: ViewChatComponent
+		path: 'chat', component: ViewChatComponent, canActivate: [myGuard]
 	},
 	{
 		path: '**', redirectTo: '/'

@@ -1,38 +1,45 @@
+<app-header></app-header>
 <!-- Ventana de chat -->
 <div class="flex flex-col h-screen">
     <div
         class="flex-grow container max-w-screen-md mx-auto mt-20 mb-5 flex flex-col overflow-y-hidden bg-transparent"
     >
         <div
-            class="bg-[#e2eae5] border-[#4E67516D] dark:bg-[#1f2b3e] dark:border-indigo-200 dark:border-x-blue-500/30 mx-2 border-4  border-y-0 shadow-lg rounded-lg flex flex-col overflow-hidden h-full"
+            class="bg-[#e2eae5] border-[#4E67516D] dark:bg-[#1f2b3e] dark:border-indigo-200 dark:border-x-blue-500/30 mx-2 border-4 border-y-0 shadow-lg rounded-lg flex flex-col overflow-hidden h-full"
         >
             <!-- Header del chat -->
             <header
-                class="bg-[#94c88d] shadow-lg text-black dark:text-white dark:bg-[#436491] p-2  text-center flex justify-center items-center"
+                class="bg-[#94c88d] shadow-lg text-black dark:text-white dark:bg-[#436491] p-2 text-center flex justify-center items-center"
             >
-                <span>Chat</span>
+                <span>Chat de: {{ nameUser }}</span>
             </header>
 
             <!-- Contenedor de mensajes -->
             <div class="flex-1 overflow-y-auto p-5">
                 <div class="flex flex-col space-y-2">
-                    <!-- Mensaje del usuario -->
-                    <div class="flex justify-end">
+                    <div *ngFor="let msg of messages">
+                        <!-- Mensaje del asesor -->
                         <div
-                            class="bg-green-300/40 dark:bg-blue-200 text-black shadow-lg p-2 rounded-l-lg rounded-tr-lg max-w-64 sm:max-w-xs"
+                            *ngIf="msg.user === 'asesor'"
+                            class="flex justify-start"
                         >
-                            Hey, how's your day going? Hey, how's your day
-                            going? Lorem ipsum dolor sit amet consectetur
-                            adipisicing elit. Minima, cupiditate!
+                            <div
+                                class="bg-gray-300 text-black break-words shadow-lg p-2 rounded-r-lg rounded-tl-lg max-w-64 sm:max-w-xs"
+                            >
+                                {{ msg.msg }}
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Mensaje del asesor -->
-                    <div class="flex">
+                        <!-- Mensaje del usuario -->
                         <div
-                            class="bg-gray-300 text-black shadow-lg p-2 rounded-r-lg rounded-tl-lg max-w-64 sm:max-w-xs"
+                            *ngIf="msg.user === 'cliente'"
+                            class="flex justify-end"
                         >
-                            Not too bad, just a bit busy. How about you?
+                            <div
+                                class="bg-green-300/40 dark:bg-blue-200 text-black break-words shadow-lg p-2 rounded-l-lg rounded-tr-lg max-w-64 sm:max-w-xs"
+                            >
+                                {{ msg.msg }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -40,41 +47,45 @@
 
             <!-- Input para mensajes -->
             <footer class="dark:bg-[#436491] bg-[#94c88d] p-4">
-                <div class="flex items-center">
-                    <input
-                        type="text"
-                        placeholder="Escribe tu mensaje..."
-                        class="flex-1 border rounded-full px-4 py-2 focus:outline-none text-black bg-white dark:bg-black dark:text-white"
-                    />
-                    <button
-                        class="bg-green-600 text-white hover:bg-green-500 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-full p-2 ml-2  focus:outline-none"
-                    >
-                        <svg
-                            width="20px"
-                            height="20px"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            stroke="#ffffff"
+                <form (ngSubmit)="onSendButton()" >
+                    <div class="flex items-center">
+                        <input
+                            type="text"
+                            placeholder="Escribe tu mensaje..."
+                            class="flex-1 border rounded-full px-4 py-2 focus:outline-none text-black bg-white dark:bg-black dark:text-white"
+                        />
+                        <button
+                            class="bg-green-600 text-white hover:bg-green-500 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-full p-2 ml-2 focus:outline-none"
+                            
                         >
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g
-                                id="SVGRepo_tracerCarrier"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            ></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
-                                    stroke="#ffffff"
-                                    stroke-width="2"
+                            <svg
+                                width="20px"
+                                height="20px"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                stroke="#ffffff"
+                            >
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g
+                                    id="SVGRepo_tracerCarrier"
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                ></path>
-                            </g>
-                        </svg>
-                    </button>
-                </div>
+                                ></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
+                                        stroke="#ffffff"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    ></path>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+
+                </form>
             </footer>
         </div>
     </div>

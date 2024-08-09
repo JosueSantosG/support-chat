@@ -1,4 +1,4 @@
-
+<app-header></app-header>
 <div
     class="flex items-center justify-center w-full h-screen py-6 md:py-24 lg:py-32"
 >
@@ -13,7 +13,7 @@
                 Obtén ayuda rápida y eficiente con nuestro chat online. Inicia
                 una conversación y resuelve tus dudas.
             </p>
-            <form class="mt-8 gap-6">
+            <form (ngSubmit)="joinRoom()" class="mt-8 gap-6">
                 <ul>
                     <li>
                         <label
@@ -25,16 +25,18 @@
                         <input
                             class="mt-2 text-sm w-full rounded-md border p-3 shadow-lg focus:outline-none text-black bg-white dark:bg-black dark:text-white"
                             id="name"
+                            name="name"
                             placeholder="Ingresa tu nombre"
                             type="text"
+                            [(ngModel)]="nameUser"
+                            required
                         />
                     </li>
                     <li class="mt-4">
                         <button
                             class="w-full rounded-md py-3 px-4 text-lg font-medium shadow-lg border-transparent bg-slate-700 text-white hover:bg-slate-500 transition-colors duration-300"
                             type="submit"
-                            (click)="joinRoom()"
-                            [routerLink]="['/welcome/chat']"
+                            
                         >
                             Iniciar Chat
                         </button>
