@@ -2,17 +2,10 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import http, { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import routesChat from '../routes/chat';
+import indexRoutes from '../routes/index';
+import db from '../database/connection';
+import { socketHandler } from '../controllers/chat';
 
-interface JoinData {
-    room: string;
-}
-
-interface MessageData {
-    room: string;
-    user: string;
-    message: string;
-}
 
 class ServerApp {
     private app: Application;
@@ -31,12 +24,24 @@ class ServerApp {
 			cors: {
 				origin: "*",
 				methods: ["GET", "POST"]
-			}
+			},
+            connectionStateRecovery:{
+
+            }
 		});
+        this.dbConnection();
         this.middlewares();
 		this.routes();
-		this.socketIO();
+        this.socketIO();
 		
+    }
+    async dbConnection() {
+        try {
+            await db.authenticate();
+            console.log('Base de datos conectada...');
+        } catch (error) {
+            console.error('Error al autenticar con la base de datos:', error);
+        }
     }
 
     middlewares() {
@@ -45,42 +50,12 @@ class ServerApp {
         this.app.use(express.static("public"));
     }
 
-	socketIO() {
-        this.io.on("connection", (socket: Socket) => {
-            //Crear sala para cada usuario con su propio id
-            socket.emit('connected', socket.id);
-            console.log(`Client ${socket.id} joined room`);
-            
-            //Un asesor se une a la sala de un cliente
-            socket.on('joinRoom', (roomName) => {
-                socket.join(roomName);
-                console.log(`Asesor ${socket.id} unido a la sala: ${roomName}`);
-                this.io.to(roomName).emit('notification', `Asesor ${socket.id} se ha unido a la sala.`);
-            });
-            //Enviar mensaje a la sala
-            socket.on('sendMessage', (roomName, message) => {
-                this.io.to(roomName).emit('receiveMessage', { sender: socket.id, message });
-                console.log(`Mensaje enviado por ${socket.id} en la sala ${roomName}: ${message}`);
-            });
-
-            //Listar salas y clientes conectados
-                /* const roomsMap = this.io.of("/").adapter.rooms;
-                roomsMap.forEach((clients, room) => {
-                    const clientsArray = Array.from(clients);
-                    console.log(`Sala: ${room}, Clientes: ${clientsArray}`);
-                    
-                }); */
-            
-            //Desconectar cliente o asesor
-            socket.on("disconnect", () => {
-                console.log("Client disconnected: " + socket.id);
-            });
-
-        });
+    socketIO() {
+        socketHandler(this.io);
     }
 
 	routes(){
-		this.app.use(this.apiPaths.chat, routesChat);
+		this.app.use(this.apiPaths.chat, indexRoutes);
 	}
 
     listen() {

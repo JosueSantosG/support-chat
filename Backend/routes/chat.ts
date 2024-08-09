@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getMessages } from '../controllers/chat';
+import { createUser } from '../controllers/chat';
 
 const router = Router();
 
-router.get('/', getMessages);
+/* router.get('/', getMessages); */
+router.post('/createUser', createUser);
 
 export default router;
