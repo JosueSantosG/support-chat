@@ -11,6 +11,9 @@ import { MainComponent } from './pages/main/main.component';
 
 import { SupportChatRoutingModule } from './support-chat-routing.module';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { ViewClienteComponent } from './pages/view-cliente/view-cliente.component';
+import { ViewAsesorComponent } from './pages/view-asesor/view-asesor.component';
+import { ViewLoginComponent } from './pages/view-login/view-login.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,10 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
     LoginComponent,
     WaitingRoomComponent,
     HeaderComponent,
-    ThemeToggleComponent
+    ThemeToggleComponent,
+    ViewClienteComponent,
+    ViewAsesorComponent,
+    ViewLoginComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +39,10 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
     LoginComponent,
     WaitingRoomComponent,
     HeaderComponent,
+    ThemeToggleComponent,
+    ViewClienteComponent,
+    ViewAsesorComponent,
+    ViewLoginComponent
     
   ]
 })

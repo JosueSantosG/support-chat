@@ -1,11 +1,7 @@
-<app-header></app-header>
+
 <!-- Ventana de chat -->
-<div class="flex flex-col h-screen">
-    <div
-        class="flex-grow container max-w-screen-md mx-auto mt-20 mb-5 flex flex-col overflow-y-hidden bg-transparent"
-    >
         <div
-            class="bg-[#e2eae5] border-[#4E67516D] dark:bg-[#1f2b3e] dark:border-indigo-200 dark:border-x-blue-500/30 mx-2 border-4 border-y-0 shadow-lg rounded-lg flex flex-col overflow-hidden h-full"
+            class="bg-[#e2eae5] border-[#4E67516D] dark:bg-[#1f2b3e] dark:border-indigo-200 dark:border-x-blue-500/30 border-4 border-y-0 shadow-lg rounded-lg flex flex-col overflow-hidden h-full"
         >
             <!-- Header del chat -->
             <header
@@ -24,7 +20,7 @@
                             class="flex justify-start"
                         >
                             <div
-                                class="bg-gray-300 text-black break-words shadow-lg p-2 rounded-r-lg rounded-tl-lg max-w-64 sm:max-w-xs"
+                                class="bg-gray-300 text-black break-words shadow-lg p-2 rounded-r-lg rounded-tl-lg max-w-32 sm:max-w-xs"
                             >
                                 {{ msg.msg }}
                             </div>
@@ -36,7 +32,7 @@
                             class="flex justify-end"
                         >
                             <div
-                                class="bg-green-300/40 dark:bg-blue-200 text-black break-words shadow-lg p-2 rounded-l-lg rounded-tr-lg max-w-64 sm:max-w-xs"
+                                class="bg-green-300/40 dark:bg-blue-200 text-black break-words shadow-lg p-2 rounded-l-lg rounded-tr-lg max-w-32 sm:max-w-xs"
                             >
                                 {{ msg.msg }}
                             </div>
@@ -52,7 +48,7 @@
                         <input
                             type="text"
                             placeholder="Escribe tu mensaje..."
-                            class="flex-1 border rounded-full px-4 py-2 focus:outline-none text-black bg-white dark:bg-black dark:text-white"
+                            class="w-full flex-1 border rounded-full px-4 py-2 focus:outline-none text-black bg-white dark:bg-black dark:text-white"
                         />
                         <button
                             class="bg-green-600 text-white hover:bg-green-500 dark:bg-blue-500 dark:hover:bg-blue-600 rounded-full p-2 ml-2 focus:outline-none"
@@ -88,5 +84,3 @@
                 </form>
             </footer>
         </div>
-    </div>
-</div>

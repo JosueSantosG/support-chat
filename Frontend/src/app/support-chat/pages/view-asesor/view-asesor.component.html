@@ -1,0 +1,9 @@
+<app-header></app-header>
+<div class="flex flex-row h-screen p-1 pt-16 overflow-hidden gap-1">
+    <div class="w-2/5">
+        <app-waiting-room></app-waiting-room>
+    </div>
+    <div class="w-full">
+        <app-view-chat *ngIf="value===true" ></app-view-chat>
+    </div>
+</div>

@@ -1,49 +1,72 @@
 <ng-template #loading>
-  <p>Cargando clientes...</p>
+    <p>Cargando clientes...</p>
 </ng-template>
 
-<app-header></app-header>
-
 <!-- component -->
-<div class="flex h-screen ml-5 overflow-hidden">
     <!-- Sidebar -->
-    <div class="w-2/5 shadow-md rounded-md bg-[#dcf1e4] dark:bg-[#1f2b3e] mt-20 mb-5">
-      <!-- Sidebar Header -->
-      <header class="p-3 rounded-md flex justify-between items-center bg-green-600/50 dark:bg-blue-600/50 text-white">
-        <h1 class="text-2xl font-semibold">Clientes</h1>
-        <div class="relative">
-          <button id="menuButton" class="focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-100" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-              <path d="M2 10a2 2 0 012-2h12a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z" />
-            </svg>
-          </button>
-        </div>
-      </header>
-    
-      <!-- Contact List -->
-      <div *ngIf="clientes().length > 0; else loading" class="overflow-y-auto h-[88%] ">
-        <div *ngFor="let cliente of clientes()" (click)="selectCliente(cliente.id_chat, cliente.nombre_sala)" class="flex items-center mb-4 cursor-pointer hover:bg-[#94c88d] dark:hover:bg-[#436491] text-black dark:text-white p-2 rounded-md" >
-          <div class="w-12 h-auto bg-gray-300 rounded-full mr-3">
-              <img src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" alt="User Avatar" class="w-12 h-auto rounded-full">
-          </div>
-          <div class="flex justify-between w-full items-center space-y-1">
-              <div class="flex flex-col">
-                  <h3 class="text-lg font-semibold"> {{cliente.nombre_sala}} </h3>
-                  <p class="max-w-40 truncate text-sm text-gray-500 dark:text-gray-300"> {{cliente.nombre_sala}} </p>
-                  
-              </div>
-              <div class="flex flex-col items-end">
-                  <div class="overflow-hidden rounded-xl border border-green-600 px-2 mb-2 text-xs font-medium text-green-600 bg-green-600/10 "> {{cliente.estado}} </div>
-                  <p class="text-xs">14 minutes ago</p>
-              </div>
-          </div>
-          <hr>
-        </div>
+    <div
+        class=" h-full shadow-md rounded-md bg-[#dcf1e4] dark:bg-[#1f2b3e] "
+    >
+        <!-- Sidebar Header -->
+        <header
+            class="p-3 rounded-md flex justify-between items-center bg-green-600/50 dark:bg-blue-600/50 text-white"
+        >
+            <h1 class="text-2xl font-semibold">Clientes</h1>
+            <div class="relative">
+                <button id="menuButton" class="focus:outline-none">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-gray-100"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path
+                            d="M2 10a2 2 0 012-2h12a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z"
+                        />
+                    </svg>
+                </button>
+            </div>
+        </header>
 
-      </div>
+        <!-- Contact List -->
+        <div
+            *ngIf="clientes().length > 0; else loading"
+            class="overflow-y-auto h-[88%]"
+        >
+            <div
+                *ngFor="let cliente of clientes()"
+                (click)="selectCliente(cliente.id_chat, cliente.nombre_sala)"
+                class="flex items-center mb-4 cursor-pointer hover:bg-[#94c88d] dark:hover:bg-[#436491] text-black dark:text-white p-2 rounded-md"
+            >
+                <div class="w-12 h-auto bg-gray-300 rounded-full mr-3">
+                    <img
+                        src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
+                        alt="User Avatar"
+                        class="w-12 h-auto rounded-full"
+                    />
+                </div>
+                <div class="flex justify-between w-full items-center space-y-1">
+                    <div class="flex flex-col">
+                        <h3 class="text-lg font-semibold">
+                            {{ cliente.nombre_sala }}
+                        </h3>
+                        <p
+                            class="max-w-40 truncate text-sm text-gray-500 dark:text-gray-300"
+                        >
+                            {{ cliente.nombre_sala }}
+                        </p>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <div
+                            class="overflow-hidden rounded-xl border border-green-600 px-2 mb-2 text-xs font-medium text-green-600 bg-green-600/10"
+                        >
+                            {{ cliente.estado }}
+                        </div>
+                        <p class="text-xs">14 minutes ago</p>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
     </div>
-    
-    <!-- Main Chat Area -->
-    <app-view-chat class="w-full"></app-view-chat>
-</div>
