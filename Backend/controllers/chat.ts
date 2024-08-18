@@ -39,8 +39,8 @@ export const socketHandler = (io: Server) => {
                     socket.emit('receiveMessage', datas);
                 });
             });
-            //io.to(roomID).emit('notification', `El cliente ${socket.id} se ha unido a la sala ${roomID}`);
-            console.log(`Cliente ${socket.id} se unió a la sala ${roomID}`);
+            socket.to(roomID).emit('joinAsesor', 'Un asesor se ha unido a la sala');
+            console.log(`Cliente se unió a la sala ${roomID}`);
         });
     
         // Enviar mensaje a la sala
@@ -51,7 +51,7 @@ export const socketHandler = (io: Server) => {
                     tipo_usuario: data.tipo_usuario,
                 };
                 const id_chat = Number(data.roomID);
-                const result=await Mensajes.create({ id_chat: id_chat , mensaje: data.message, tipo_usuario: datas.tipo_usuario });
+                const result=await Mensajes.create({ id_chat: id_chat , mensaje: data.message, tipo_usuario: data.tipo_usuario });
     
                 socket.to(data.roomID).emit('receiveMessage', datas, {id_mensaje: result.id_mensaje.toString()});
                 console.log(`Mensaje de ${datas.tipo_usuario} en la sala ${data.roomID}: ${data.message}`);
@@ -62,14 +62,22 @@ export const socketHandler = (io: Server) => {
             }
             
         });
-    
+        // Salir de sala
+        socket.on('exitChat', (roomID) => {
+            socket.leave(roomID);
+            console.log(`El asesor salió de la sala ${roomID}`);
+        });
+        
         // Desconectar
         socket.on('disconnect', () => {
-            console.log(`Cliente ${socket.id} desconectado`);
+            console.log(`Cliente desconectado`);
         });
 
         if(!socket.recovered){
             try {
+                socket.join(socket.handshake.auth.id_chat);
+                console.log('Cliente despues de reconexion: '+socket.handshake.auth.id_chat);
+                
                 const id_chat = Number(socket.handshake.auth.id_chat);
                 const results = await Mensajes.findAll({ where: {[Op.and]:[{ id_chat: id_chat },{id_chat: { [Op.gt]: socket.handshake.auth.ServerOffSet ?? 0}}] }});
                 results.forEach(async (result) => {

@@ -5,7 +5,7 @@ export const waitingRoom = async (req: Request,res: Response) => {
     // Recuperar todos los chats de cada usuario
     try {
         const chatUsers = await ChatRooms.findAll();
-        console.log(chatUsers);
+        //console.log(chatUsers);
         return res.status(200).json({Chats:chatUsers});
     } catch (error) {
         console.log(error);

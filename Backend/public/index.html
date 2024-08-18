@@ -1,90 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Chat de Soporte</title>
-		<style>
-			#notifications {
-				font-size: 1.2em;
-				font-weight: bold;
-				margin-bottom: 10px;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Chat de Soporte</h1>
-		<div id="notifications"></div>
-		<div>
-			<input type="text" id="roomInput" placeholder="Nombre de la sala" />
-			<button id="joinRoomButton">Unirse a la sala</button>
-		</div>
-		<div>
-			<input type="text" id="messageInput" placeholder="Mensaje" />
-			<button id="sendMessageButton">Enviar Mensaje</button>
-            <button id="toggle-btn">Disconnect</button>
-		</div>
-		<div id="messages"></div>
-		<div></div>
-
-		<script src="/socket.io/socket.io.js"></script>
-		<script>
-			const socket = io();
-
-			const toggleButton = document.getElementById("toggle-btn");
-
-			toggleButton.addEventListener("click", (e) => {
-				e.preventDefault();
-				if (socket.connected) {
-					toggleButton.innerText = "Connect";
-					socket.disconnect();
-				} else {
-					toggleButton.innerText = "Disconnect";
-					socket.connect();
-				}
-			});
-			socket.on("connected", (clientId) => {
-				const notificationDiv =
-					document.getElementById("notifications");
-				notificationDiv.textContent = `Cliente ${clientId} conectado`;
-				sessionStorage.setItem("clientId", clientId);
-			});
-
-			document
-				.getElementById("joinRoomButton")
-				.addEventListener("click", () => {
-					const roomName = document.getElementById("roomInput").value;
-					socket.emit("joinRoom", roomName);
-				});
-
-			document
-				.getElementById("sendMessageButton")
-				.addEventListener("click", () => {
-					const roomName = document.getElementById("roomInput").value;
-					const message =
-						document.getElementById("messageInput").value;
-					const clientId = sessionStorage.getItem("clientId");
-					console.log(clientId, roomName);
-					socket.emit(
-						"sendMessage",
-						roomName ? roomName : clientId,
-						message
-					);
-				});
-
-			socket.on("receiveMessage", (data) => {
-				const messagesDiv = document.getElementById("messages");
-				const messageElement = document.createElement("div");
-				messageElement.textContent = `${data.sender}: ${data.message}`;
-				messagesDiv.appendChild(messageElement);
-			});
-
-			socket.on("notification", (message) => {
-				const messagesDiv = document.getElementById("messages");
-				const messageElement = document.createElement("div");
-				messageElement.textContent = message;
-				messagesDiv.appendChild(messageElement);
-			});
-		</script>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 403</title>
+</head>
+<body>
+    <h1>ACCESO DENEGADO!</h1>
+</body>
 </html>
