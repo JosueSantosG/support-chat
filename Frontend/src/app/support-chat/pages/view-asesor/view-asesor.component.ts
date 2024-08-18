@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { AsesorService } from '../../services/asesor.service';
 
 @Component({
   selector: 'app-view-asesor',
@@ -6,13 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './view-asesor.component.css'
 })
 export class ViewAsesorComponent implements OnInit {
-    value : boolean;    
+  //Signal del servicio envés del constructor
+    private asesorService = inject(AsesorService);
+    value = this.asesorService.value;
     constructor(){
-      this.value = false;
     }
+
+
     ngOnInit():void{
-      this.value = false;
+        //this.asesorService.getValue();
     } 
+
+    
 
 
 }

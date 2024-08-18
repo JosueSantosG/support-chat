@@ -34,9 +34,14 @@ export class ClienteService {
         roomID: string;
         message: string;
         tipo_usuario: string;
+
     }): void {
-        this.socket.io.emit('sendMessage', data);
-        console.log('Data:', data);
+        this.socket.io.emit('sendMessage', {
+            ...data,
+            ServerOffSet: this.socket.auth.ServerOffSet,
+            userName: this.socket.auth.userName,
+            id_chat: this.socket.auth.id_chat,
+        });
     }
 
     //Recibir mensaje
@@ -46,11 +51,15 @@ export class ClienteService {
                 'receiveMessage',
                 (
                     datas: { message: string; tipo_usuario: string },
-                    ServerOffSet: number
+                    ServerOffSet: number,
+                    userName: string,
+                    id_chat: string,
                 ) => {
                     observer.next(datas);
                     this.socket.auth.ServerOffSet = ServerOffSet;
-                    console.log('Data:', datas);
+                    this.socket.auth.userName = userName;
+                    this.socket.auth.id_chat = id_chat;
+
                 }
             );
         });

@@ -17,13 +17,25 @@ export class MainComponent implements OnInit {
 
   joinRoom() {
       sessionStorage.setItem('userName', this.nameUser);
+      sessionStorage.setItem('typeUser', 'cliente');
       this.clienteService.createUser(this.nameUser).subscribe((response)=>{
         sessionStorage.setItem('id_chat', response.result.id_chat.toString());
         this.router.navigate(['/welcome/chat']);
+        this.loadMsj();
       },(error)=>{
         console.log('Error:', error);
       });
   }
+
+  private loadMsj() {
+    const idchat=sessionStorage.getItem('id_chat');
+    if(idchat === null){
+        return;
+    }
+    this.clienteService.joinRoom(idchat);
+    console.log('idchat:', idchat);
+    
+}
 
 
 }

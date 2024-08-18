@@ -36,7 +36,7 @@
         >
             <div
                 *ngFor="let cliente of clientes()"
-                (click)="selectCliente(cliente.id_chat, cliente.nombre_sala)"
+                (click)="selectCliente(cliente.id_chat)"
                 class="flex items-center mb-4 cursor-pointer hover:bg-[#94c88d] dark:hover:bg-[#436491] text-black dark:text-white p-2 rounded-md"
             >
                 <div class="w-12 h-auto bg-gray-300 rounded-full mr-3">
