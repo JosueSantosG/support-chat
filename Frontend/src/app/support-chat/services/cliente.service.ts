@@ -14,6 +14,14 @@ export class ClienteService {
         this.myUrl = env.url;
     }
 
+    //Obtener nombre de usuario
+    getUserName(): Observable<string> {
+        return new Observable((observer) => {
+            observer.next(sessionStorage.getItem('userName')!);
+            observer.complete();
+        });
+    }
+
     //Crear usuario
     createUser(userName: string): Observable<any> {
         return new Observable((observer) => {

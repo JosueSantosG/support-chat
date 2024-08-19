@@ -17,6 +17,12 @@ export class AsesorService {
   public value = signal<boolean>(false);
   // Signal para manejar el id del chat
   public resetChatSignal = signal<boolean>(false); // Señal para reiniciar el chat
+  // Señal para el estado del sidebar
+  public isCollapsed = signal<boolean>(false); 
+  // Señal para el cambio de nombre de usuario
+  public nameUser = signal<string>('Annonymous');
+  
+
 
   
   constructor(private http: HttpClient, private socket: SocketioService, private clienteService:ClienteService) {
@@ -50,6 +56,15 @@ export class AsesorService {
 
   resetChat(): void {
     this.resetChatSignal.set(true); // Activa la señal de reinicio del chat
+  }
+
+  sideBar(): void{
+    this.isCollapsed.set(!this.isCollapsed());
+  }
+
+  changeUsername(name: string): void{
+    //sessionStorage.getItem('userName');
+    this.nameUser.set(name);
   }
 
 

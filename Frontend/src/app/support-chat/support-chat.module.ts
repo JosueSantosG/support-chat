@@ -14,6 +14,7 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
 import { ViewClienteComponent } from './pages/view-cliente/view-cliente.component';
 import { ViewAsesorComponent } from './pages/view-asesor/view-asesor.component';
 import { ViewLoginComponent } from './pages/view-login/view-login.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ViewLoginComponent } from './pages/view-login/view-login.component';
     ThemeToggleComponent,
     ViewClienteComponent,
     ViewAsesorComponent,
-    ViewLoginComponent
+    ViewLoginComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +44,8 @@ import { ViewLoginComponent } from './pages/view-login/view-login.component';
     ThemeToggleComponent,
     ViewClienteComponent,
     ViewAsesorComponent,
-    ViewLoginComponent
+    ViewLoginComponent,
+    SpinnerComponent
     
   ]
 })

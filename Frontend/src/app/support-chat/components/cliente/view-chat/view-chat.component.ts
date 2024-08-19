@@ -10,6 +10,7 @@ import {
 import { Messages } from '../../../../interfaces/Messsages';
 import { ClienteService } from './../../../services/cliente.service';
 import { AsesorService } from '../../../services/asesor.service';
+import { ChatService } from './../../../services/chat.service';
 
 @Component({
     selector: 'app-view-chat',
@@ -20,26 +21,36 @@ export class ViewChatComponent implements OnInit {
     @ViewChild('chatScroll') chatScrollContainer!: ElementRef;
 
     messages: Messages[] = [];
-    nameUser: string = '';
     typeUser: string = sessionStorage.getItem('typeUser') || 'asesor';
 
     // Signal del servicio envés del constructor
     private asesorService = inject(AsesorService);
+    changeUser = this.asesorService.nameUser;
     constructor(private clienteService: ClienteService) {
-        this.observeResetSignal();
+        this.changeNameUser();
+        this.clearMessages();
+        
     }
 
     ngOnInit(): void {
-        this.nameUser = sessionStorage.getItem('userName')!;
+        sessionStorage.getItem('userName');
+        const name =sessionStorage.getItem('userName')!;
+        this.changeUser.set(name);
         this.welcomeMsg();
         this.receiveMessages();
     }
+    
+    private changeNameUser(): void {
+        effect(() => {
+            this.changeUser = this.asesorService.nameUser;
+        });
+    }
 
-    private observeResetSignal(): void {
+    private clearMessages(): void {
         effect(
             () => {
                 if (this.asesorService.resetChatSignal()) {
-                    this.clearMessages();
+                    this.messages = [];
                     this.asesorService.resetChatSignal.set(false); // Resetear la señal para futuros reinicios
                 }
             },
@@ -87,10 +98,6 @@ export class ViewChatComponent implements OnInit {
                 this.messages.push(receivedMessage);
                 this.scrollChat();
             });
-    }
-
-    private clearMessages() {
-        this.messages = [];
     }
 
     // scroll al final del chat

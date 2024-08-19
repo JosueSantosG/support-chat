@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="flex flex-row h-screen p-1 pt-16 overflow-hidden gap-1">
-    <div class="w-2/5">
+    <div class="relative ml-2 sm:ml-0" [ngClass]="isCollapsed() ? 'w-1/12':'w-2/3 sm:w-2/5'" >
         <app-waiting-room></app-waiting-room>
     </div>
     <div class="w-full">
