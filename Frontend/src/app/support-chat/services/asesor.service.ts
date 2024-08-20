@@ -21,7 +21,9 @@ export class AsesorService {
   public isCollapsed = signal<boolean>(false); 
   // Señal para el cambio de nombre de usuario
   public nameUser = signal<string>('Annonymous');
-  
+  // Signal para el mensaje del asesor
+  public msgAsesor = signal<string>('');
+
 
 
   
@@ -30,12 +32,19 @@ export class AsesorService {
   }
 
   //Obtener lista de usuarios
-  getClientes(): void{
-    this.http.get<{ Chats: Chats[] }>(`${this.myUrl}/api/chat/listUsers`)
-    .subscribe((response) => {
-      this.clientes.set(response.Chats);
+  getClientes(): Observable<{ Chats: Chats[] }>{
+    return new Observable((observer) => {
+      this.socket.io.emit('waitingRoom');
+      this.socket.io.on('listUsers', (data: { Chats: Chats[] }) => {
+        observer.next(data);
+        
+      });
+      this.socket.io.on('newUser', (data: { Chats: Chats }) => {
+        this.clientes.set([...this.clientes(), data.Chats]);
+      });
     });
   }
+
   //TODO: Crear función para obtener mensajes de un usuario
   getMensajes(id: string): Observable<any>{
     return this.http.get(`${this.myUrl}/api/chat/getMessages/${id}`);
@@ -46,6 +55,16 @@ export class AsesorService {
     this.value.set(true);
     this.resetChatSignal.set(true);
     this.clienteService.joinRoom(roomID.toString());
+  }
+
+  //Enviar mensaje de asesor se ha unido
+  joinAsesor(): Observable<{msg: string}>{
+    return new Observable((observer) => {
+      this.socket.io.on('joinAsesor', (data: {msg: string}) => {
+        observer.next(data);
+        this.msgAsesor.set(data.msg);
+      });
+    });
   }
 
   // Salir del chat del usuario
