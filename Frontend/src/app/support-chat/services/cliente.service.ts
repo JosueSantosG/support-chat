@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { env } from '../../../environments/environments';
@@ -8,7 +8,9 @@ import { SocketioService } from './socketio.service';
     providedIn: 'root',
 })
 export class ClienteService {
-    private myUrl: string;
+    myUrl: string;
+    // Signal que mantendrá los datos de los clientes
+    public userName = signal<string>('');
 
     constructor(private http: HttpClient, private socket: SocketioService) {
         this.myUrl = env.url;
@@ -25,16 +27,17 @@ export class ClienteService {
     //Crear usuario
     createUser(userName: string): Observable<any> {
         return new Observable((observer) => {
-            this.http
-                .post<any>(`${this.myUrl}/api/chat/createUser`, { userName })
-                .subscribe((response) => {
-                    observer.next(response);
-                });
+            this.socket.io.emit('createUser', userName);
+            this.socket.io.on('userCreated', (data: any) => {
+                observer.next(data);
+            });
         });
     }
+
     //Entrar a una sala
     joinRoom(roomID: string) {
         this.socket.io.emit('joinRoom', roomID);
+        
     }
 
     //Enviar mensaje
@@ -42,7 +45,7 @@ export class ClienteService {
         roomID: string;
         message: string;
         tipo_usuario: string;
-
+        hour: string;
     }): void {
         this.socket.io.emit('sendMessage', {
             ...data,
@@ -53,12 +56,12 @@ export class ClienteService {
     }
 
     //Recibir mensaje
-    receiveMessage(): Observable<{ message: string; tipo_usuario: string }> {
+    receiveMessage(): Observable<{ message: string; tipo_usuario: string; hour: string }> {
         return new Observable((observer) => {
             this.socket.io.on(
                 'receiveMessage',
                 (
-                    datas: { message: string; tipo_usuario: string },
+                    datas: { message: string; tipo_usuario: string, hour: string },
                     ServerOffSet: number,
                     userName: string,
                     id_chat: string,
@@ -67,7 +70,6 @@ export class ClienteService {
                     this.socket.auth.ServerOffSet = ServerOffSet;
                     this.socket.auth.userName = userName;
                     this.socket.auth.id_chat = id_chat;
-
                 }
             );
         });
