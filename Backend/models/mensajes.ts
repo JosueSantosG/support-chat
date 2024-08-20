@@ -7,6 +7,7 @@ interface MensajesAttributes {
     id_chat: number;
     mensaje: string;
     tipo_usuario: string;
+    hour: string;
 }
 
 interface MensajesCreationAttributes extends Optional<MensajesAttributes, "id_mensaje" | "id_usuario" > {}
@@ -17,6 +18,7 @@ class Mensajes extends Model<MensajesAttributes, MensajesCreationAttributes> imp
     public id_chat!: number;
     public mensaje!: string;
     public tipo_usuario!: string;
+    public hour!: string;
 }
 
 
@@ -36,6 +38,9 @@ Mensajes.init({
         type: DataTypes.STRING
     },
     tipo_usuario: {
+        type: DataTypes.STRING
+    },
+    hour: {
         type: DataTypes.STRING
     }
     
