@@ -51,3 +51,6 @@ El asesor tiene control completo sobre la gestión de los chats:
 ---
 
 ¡Dale un vistazo y pruébalo! 😉
+
+## Próximamente
+- **Login**: Antes de acceder al listado de clientes, el asesor deberá iniciar sesión.
