@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { ClienteService } from './../../services/cliente.service';
@@ -22,8 +22,6 @@ export class MainComponent implements OnInit {
         sessionStorage.setItem('id_chat', response.result.id_chat.toString());
         this.router.navigate(['/welcome/chat']);
         this.loadMsj();
-      },(error)=>{
-        console.log('Error:', error);
       });
   }
 
@@ -32,9 +30,7 @@ export class MainComponent implements OnInit {
     if(idchat === null){
         return;
     }
-    this.clienteService.joinRoom(idchat);
-    console.log('idchat:', idchat);
-    
+    this.clienteService.joinRoom(idchat);    
 }
 
 
