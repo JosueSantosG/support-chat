@@ -26,12 +26,16 @@ export class ViewChatComponent implements OnInit {
     // Signal del servicio envés del constructor
     private asesorService = inject(AsesorService);
     changeUser = this.asesorService.nameUser;
+    msgAsesor = this.asesorService.msgAsesor;
+
+
     constructor(private clienteService: ClienteService) {
         this.changeNameUser();
         this.clearMessages();
+        this.MsgJoinAsesor();
         
     }
-
+    
     ngOnInit(): void {
         sessionStorage.getItem('userName');
         const name =sessionStorage.getItem('userName')!;
@@ -39,6 +43,18 @@ export class ViewChatComponent implements OnInit {
         this.welcomeMsg();
         this.receiveMessages();
     }
+
+private MsgJoinAsesor() {
+    effect(() => {
+        this.asesorService.joinAsesor().subscribe(() => {
+            this.msgAsesor = this.asesorService.msgAsesor;
+            this.messages.push({
+                isNotification: true,
+            })
+        });
+    });
+}
+
     
     private changeNameUser(): void {
         effect(() => {
@@ -72,7 +88,8 @@ export class ViewChatComponent implements OnInit {
             return;
         }
 
-        const sendMessage = { user: this.typeUser, msg: text };
+        const createdAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const sendMessage = { user: this.typeUser, msg: text, hour: createdAt };
         this.messages.push(sendMessage);
         this.scrollChat();
 
@@ -82,6 +99,7 @@ export class ViewChatComponent implements OnInit {
             roomID: id_chat,
             message: text,
             tipo_usuario: this.typeUser,
+            hour: createdAt,
         });
 
         textField!.value = '';
@@ -90,10 +108,11 @@ export class ViewChatComponent implements OnInit {
     private receiveMessages() {
         this.clienteService
             .receiveMessage()
-            .subscribe((data: { message: string; tipo_usuario: string }) => {
+            .subscribe((data: { message: string; tipo_usuario: string; hour: string }) => {
                 const receivedMessage = {
                     user: data.tipo_usuario,
                     msg: data.message,
+                    hour: data.hour,
                 };
                 this.messages.push(receivedMessage);
                 this.scrollChat();
