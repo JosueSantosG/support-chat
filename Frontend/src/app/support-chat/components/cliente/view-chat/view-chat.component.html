@@ -15,27 +15,28 @@
     <!-- Contenedor de mensajes -->
     <div #chatScroll class="flex-1 overflow-y-auto p-5 scroll-smooth">
         <div class="flex flex-col space-y-2">
-            <div
-                *ngFor="let msg of messages"
-                class="flex"
-                [ngClass]="
-                    msg.user !== typeUser
-                        ? 'asesor justify-start'
-                        : 'cliente justify-end'
-                "
-            >
-                <div
-                    [ngClass]="
-                        msg.user !== typeUser
-                            ? 'bg-gray-300 dark:text-black rounded-r-lg rounded-tl-lg'
-                            : 'bg-green-300/40 dark:bg-blue-200 dark:text-black rounded-l-lg rounded-tr-lg'
-                    "
-                    class="break-words shadow-lg p-2 max-w-32 sm:max-w-xs"
-                >
-                    {{ msg.msg }}
+            <div *ngFor="let msg of messages" class="flex" [ngClass]="msg.isNotification ? 'justify-center' : (msg.user !== typeUser ? 'asesor justify-start' : 'cliente justify-end')">
+                <div *ngIf="msg.isNotification; else normalMessage" class="italic text-base text-black dark:text-white">
+                    {{ msgAsesor() }}
                 </div>
+                <ng-template #normalMessage>
+                    <div [ngClass]="msg.user !== typeUser ? 'bg-gray-300 dark:text-black rounded-r-lg rounded-tl-lg' : 'bg-green-300/40 dark:bg-blue-200 dark:text-black rounded-l-lg rounded-tr-lg'"
+                         class="break-words shadow-lg p-2 max-w-32 sm:max-w-xs">
+                        {{ msg.msg }}
+                        <div class="flex justify-end">
+                            <p class="text-xs text-black "> {{msg.hour}} </p>
+
+                        </div>
+                    </div>
+                </ng-template>
             </div>
+            
+            <!-- <div class="flex justify-center items-center my-2">
+                <p class="text-base italic text-black dark:text-white">{{msgAsesor()}}</p>
+            </div> -->
+            
         </div>
+        
     </div>
 
     <!-- Input para mensajes -->
