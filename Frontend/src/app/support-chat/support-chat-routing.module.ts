@@ -11,7 +11,7 @@ const routes: Routes = [
 		
 	},
 	{
-		path: 'chat', component: ViewClienteComponent
+		path: 'chat', component: ViewClienteComponent , canActivate: [myGuard]
 	},
 	{
 		path: '**', redirectTo: '/'
