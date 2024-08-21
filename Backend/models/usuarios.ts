@@ -9,10 +9,10 @@ interface UsuarioAttributes {
 }
 
 // Interfaz de atributos opcionales para la creación
-//interface UsuarioCreationAttributes extends Optional<UsuarioAttributes, 'id_usuario'> {}
+interface UsuarioCreationAttributes extends Optional<UsuarioAttributes, 'id_usuario'| 'tipo_usuario'> {}
 
 // Definir la clase del modelo
-class Usuarios extends Model<UsuarioAttributes> implements UsuarioAttributes {
+class Usuarios extends Model<UsuarioAttributes, UsuarioCreationAttributes> implements UsuarioAttributes {
     public id_usuario!: number;
     public nombre!: string;
     public tipo_usuario!: string;

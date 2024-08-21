@@ -21,32 +21,24 @@ export const socketHandler = (io: Server) => {
         // Crear usuario
         socket.on("createUser", async (userName: string) => {
             try {
-                // Buscar usuario en la base de datos
-                const [user] = await Usuarios.findOrCreate({
-                    where: { nombre: userName },
-                });
-                // Verificar si el usuario ya existe en la bd
-                const existUserInChatRoom = await ChatRooms.findOne({
-                    where: { id_usuario: user.id_usuario },
-                });
-                // Si el usuario ya existe en la bd, devolver resultados al cliente
-                if (existUserInChatRoom) {
-                    socket.emit("userCreated", { result: existUserInChatRoom });
-                } else {
-                    // Si el usuario no existe en la bd, crear un nuevo usuario
-                    const createdChatRoom = await ChatRooms.create({
-                        id_usuario: user.id_usuario,
-                        nombre_sala: userName,
-                    });
-                    socket.emit("userCreated", { result: createdChatRoom });
-                    // Buscar el usuario creado en la bd
-                    const userCreated = await ChatRooms.findOne({
-                        where: { id_chat: createdChatRoom.id_chat },
-                    });
-                    // Notificar a los asesores sobre el nuevo usuario
-                    io.emit("newUser", { Chats: userCreated });
-                    
-                }
+				// Insertar usuario en la base de datos
+				const user = await Usuarios.create({
+					nombre: userName,
+				});
+				// Se crea una sala de chat para el usuario
+				const createdChatRoom = await ChatRooms.create({
+					id_usuario: user.id_usuario,
+					nombre_sala: userName,
+				});
+				socket.emit("userCreated", { result: createdChatRoom });
+
+				// Buscar el usuario creado en la bd
+				const userCreated = await ChatRooms.findOne({
+					where: { id_chat: createdChatRoom.id_chat },
+				});
+				// Notificar a los asesores sobre el nuevo usuario
+				io.emit("newUser", { Chats: userCreated });
+				
             } catch (e) {
                 console.log(e);
             }
