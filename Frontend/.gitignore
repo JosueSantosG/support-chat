@@ -5,7 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
-/src/environments/environments.ts
+/src/environments/environment.development.ts
 
 # Node
 /node_modules
