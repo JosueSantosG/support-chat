@@ -13,6 +13,8 @@ Esta aplicación permite una interacción en tiempo real entre clientes y asesor
 ---
 
 ## 💻 Interfaz de Usuario
+Ingresa aquí 👉 **[Vista del cliente](https://chat-soporte.vercel.app/welcome)**
+
 Los usuarios pueden iniciar un chat ingresando su nombre y comenzar una conversación.
 
 1. **Inicio de Chat**: El cliente ingresa su nombre para acceder al chat.
@@ -26,9 +28,11 @@ Los usuarios pueden iniciar un chat ingresando su nombre y comenzar una conversa
 ---
 
 ## 🧑‍💼 Interfaz del Asesor
+Ingresa aquí 👉 **[Vista del asesor](https://chat-soporte.vercel.app/waiting-room)**
+
 El asesor tiene control completo sobre la gestión de los chats:
 
-1. **Selección de Cliente**: Puede elegir a un cliente para comenzar la conversación, emitiendo un mensaje al cliente (como se muestra en la imagen de arriba).
+1. **Selección de Cliente**: Puede elegir a un cliente para comenzar la conversación, emitiendo una notificación (como se muestra en la imagen de arriba).
 
    ![Selección de Cliente](https://github.com/user-attachments/assets/a1d3c725-dc24-4fc5-9c89-090c9dbe180f)
 
@@ -40,6 +44,11 @@ El asesor tiene control completo sobre la gestión de los chats:
 
    ![Persistencia de Mensajes](https://github.com/user-attachments/assets/61d40ff7-f5b9-4777-a694-da2a90cc099d)
 
+**Nota**: El listado de clientes también funciona con sockets, lo que significa que cuando un usuario se identifica, el asesor ve la actualización del listado en tiempo real.
+
+¡Dale un vistazo y pruébalo! 😉
+
+
 ---
 
 ## 🛠️ Funcionalidades Clave
@@ -50,7 +59,5 @@ El asesor tiene control completo sobre la gestión de los chats:
 
 ---
 
-¡Dale un vistazo y pruébalo! 😉
-
-## Próximamente...
-- **Login**: Antes de acceder al listado de clientes, el asesor deberá iniciar sesión.
+## ❕ Cosas por agregar...
+- **Login**: Antes de acceder al listado de clientes el asesor deberá iniciar sesión, así se podrá saber qué asesor atendió a tal cliente.
