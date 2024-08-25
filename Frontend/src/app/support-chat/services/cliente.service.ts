@@ -72,6 +72,7 @@ export class ClienteService {
                     this.socket.auth.id_chat = id_chat;
                 }
             );
+            
         });
     }
 }

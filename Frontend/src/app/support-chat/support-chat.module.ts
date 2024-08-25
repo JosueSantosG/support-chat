@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ViewChatComponent } from './components/cliente/view-chat/view-chat.component';
 import { LoginComponent } from './components/asesor/login/login.component';
@@ -33,7 +33,9 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     CommonModule,
     HttpClientModule,
     FormsModule,
-    SupportChatRoutingModule
+    ReactiveFormsModule,
+    SupportChatRoutingModule,
+
   ],
   exports: [
     ViewChatComponent,

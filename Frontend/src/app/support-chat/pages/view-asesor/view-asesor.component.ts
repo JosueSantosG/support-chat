@@ -19,9 +19,6 @@ export class ViewAsesorComponent implements OnInit {
 
 
     ngOnInit():void{
-      //console.log('valor del asesor:',this.isCollapsed());
-      
-        //this.asesorService.sideBar();
     } 
 
     

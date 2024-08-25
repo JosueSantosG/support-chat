@@ -20,6 +20,7 @@ import { ChatService } from './../../../services/chat.service';
 export class ViewChatComponent implements OnInit {
     @ViewChild('chatScroll') chatScrollContainer!: ElementRef;
 
+    isLoading:boolean = false;
     messages: Messages[] = [];
     typeUser: string = sessionStorage.getItem('typeUser') || 'asesor';
 
@@ -106,6 +107,7 @@ private MsgJoinAsesor() {
     }
 
     private receiveMessages() {
+        this.isLoading = true;
         this.clienteService
             .receiveMessage()
             .subscribe((data: { message: string; tipo_usuario: string; hour: string }) => {
@@ -116,24 +118,27 @@ private MsgJoinAsesor() {
                 };
                 this.messages.push(receivedMessage);
                 this.scrollChat();
+                this.isLoading = false;
+                
             });
+        this.isLoading = false;
     }
 
     // scroll al final del chat
-    scrollChat() {
+    async scrollChat() {
         setTimeout(() => {
             try {
                 if (!this.chatScrollContainer?.nativeElement) {
                     //console.log('El contenedor de scroll no está definido.');
                     return;
                 }
-    
+
                 const userMessages: Element[] = Array.from(
                     this.chatScrollContainer.nativeElement.getElementsByClassName(
                         'cliente'
                     )
                 );
-    
+
                 if (userMessages.length > 0) {
                     userMessages[userMessages.length - 1].scrollIntoView();
                 } else {

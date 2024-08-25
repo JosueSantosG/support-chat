@@ -1,7 +1,8 @@
 
 <ng-template #loading>
-    <app-spinner></app-spinner>
+    <div>No hay usuarios</div>
 </ng-template>
+<app-spinner [isLoading]="isLoading"></app-spinner>
 <!-- component -->
 <!-- Sidebar -->
 <div class="h-full pb-14 shadow-md rounded-md">

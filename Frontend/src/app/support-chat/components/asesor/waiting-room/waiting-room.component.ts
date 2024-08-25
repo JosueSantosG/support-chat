@@ -7,7 +7,7 @@ import { AsesorService } from './../../../services/asesor.service';
     styleUrl: './waiting-room.component.css',
 })
 export class WaitingRoomComponent {
-    loading: boolean = false;
+    isLoading: boolean = false;
 
     constructor() {
         this.getUsers();
@@ -57,9 +57,11 @@ export class WaitingRoomComponent {
     }
 
     private getUsers() {
+        this.isLoading = true;
         effect(() => {
             this.asesorService.getClientes().subscribe((data) => {
                 this.clientes.set(data.Chats);
+                this.isLoading = false
             });
         });
     }
