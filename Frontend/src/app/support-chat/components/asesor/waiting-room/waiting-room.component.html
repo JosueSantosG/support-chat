@@ -10,12 +10,12 @@
     <header
         class="p-3 rounded-md flex justify-between items-center bg-green-600/50 dark:bg-blue-600/50 text-white"
     >
-        <h1
+        <p
             class="sm:text-2xl font-semibold"
             [ngClass]="isCollapsed() ? 'hidden' : 'block'"
         >
             Usuarios
-        </h1>
+        </p>
         <div class="relative">
             <button
                 id="menuButton"
@@ -57,9 +57,9 @@
             </div>
             <div class="flex justify-between w-full items-center space-y-1">
                 <div class="flex flex-col">
-                    <h3 class="text-lg font-semibold">
+                    <p class="text-lg font-semibold">
                         {{ cliente.nombre_sala }}
-                    </h3>
+                    </p>
                     <p
                         class="max-w-40 truncate text-sm text-gray-500 dark:text-gray-300"
                     >
@@ -72,7 +72,7 @@
                     >
                         {{ cliente.estado }}
                     </div>
-                    <p class="text-xs">14 minutes ago</p>
+                    <p class="text-xs">1 minutes ago</p>
                 </div>
             </div>
             <hr />
