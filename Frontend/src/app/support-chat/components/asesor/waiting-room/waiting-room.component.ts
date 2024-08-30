@@ -1,5 +1,6 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { AsesorService } from './../../../services/asesor.service';
+import { ClienteService } from '../../../services/cliente.service';
 
 @Component({
     selector: 'app-waiting-room',
@@ -9,12 +10,14 @@ import { AsesorService } from './../../../services/asesor.service';
 export class WaitingRoomComponent {
     isLoading: boolean = false;
 
+
     constructor() {
         this.getUsers();
     }
 
     //Signal del servicio envés del constructor
     private asesorService = inject(AsesorService);
+
     selectedRoom = signal<number | null>(null); // Señal para la sala de chat seleccionada
     isCollapsed = this.asesorService.isCollapsed;
     changeUser = this.asesorService.nameUser;
@@ -60,7 +63,7 @@ export class WaitingRoomComponent {
         this.isLoading = true;
         effect(() => {
             this.asesorService.getClientes().subscribe((data) => {
-                this.clientes.set(data.Chats);
+                this.clientes.set(data);
                 this.isLoading = false
             });
         });

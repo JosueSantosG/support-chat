@@ -45,7 +45,7 @@
     >
         <div
             *ngFor="let cliente of clientes()"
-            (click)="selectCliente(cliente.id_chat, cliente.nombre_sala)"
+            (click)="selectCliente(cliente.id_chat , cliente.nombre_sala)"
             class="flex items-center mb-4 cursor-pointer hover:bg-[#94c88d] dark:hover:bg-[#436491] text-black dark:text-white p-2 rounded-md"
         >
             <div class="w-12 h-auto bg-gray-300 rounded-full mr-3">
@@ -63,7 +63,7 @@
                     <p
                         class="max-w-40 truncate text-sm text-gray-500 dark:text-gray-300"
                     >
-                        {{ cliente.nombre_sala }}
+                        {{ cliente.mensaje }}
                     </p>
                 </div>
                 <div class="flex flex-col items-end">

@@ -95,14 +95,15 @@ private MsgJoinAsesor() {
         this.scrollChat();
 
         // Enviar el mensaje a través de Socket.IO
-        const id_chat: any = sessionStorage.getItem('id_chat');
         this.clienteService.sendMessage({
-            roomID: id_chat,
+            idchat: Number(sessionStorage.getItem('id_chat')!),
+            id_usuario: Number(sessionStorage.getItem('id_usuario')!),
+            nombre_sala: sessionStorage.getItem('userName')!,
+
             message: text,
             tipo_usuario: this.typeUser,
             hour: createdAt,
         });
-
         textField!.value = '';
     }
 

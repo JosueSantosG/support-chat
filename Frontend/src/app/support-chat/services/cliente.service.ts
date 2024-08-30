@@ -26,12 +26,7 @@ export class ClienteService {
 
     //Crear usuario
     createUser(userName: string): Observable<any> {
-        return new Observable((observer) => {
-            this.socket.io.emit('createUser', userName);
-            this.socket.io.on('userCreated', (data: any) => {
-                observer.next(data);
-            });
-        });
+        return this.http.post<any>(`${this.myUrl}/api/chat/createUser`, {userName});
     }
 
     //Entrar a una sala
@@ -42,7 +37,10 @@ export class ClienteService {
 
     //Enviar mensaje
     sendMessage(data: {
-        roomID: string;
+        id_usuario: number;
+        nombre_sala: string;
+        idchat: number;
+        
         message: string;
         tipo_usuario: string;
         hour: string;
@@ -52,6 +50,11 @@ export class ClienteService {
             ServerOffSet: this.socket.auth.ServerOffSet,
             userName: this.socket.auth.userName,
             id_chat: this.socket.auth.id_chat,
+        });
+        console.log({ ...data});
+        
+        this.socket.io.on('roomID', (roomID: string) => {
+            sessionStorage.setItem('id_chat', roomID);
         });
     }
 
@@ -71,6 +74,7 @@ export class ClienteService {
                     this.socket.auth.userName = userName;
                     this.socket.auth.id_chat = id_chat;
                 }
+
             );
             
         });
