@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import db from "../database/connection";
+import ChatRooms from "./chatRooms";
 
 interface MensajesAttributes {
     id_mensaje: number;
@@ -51,5 +52,8 @@ Mensajes.init({
 }
 
 );
+
+Mensajes.belongsTo(ChatRooms, { foreignKey: 'id_chat' });
+ChatRooms.hasMany(Mensajes, { foreignKey: 'id_chat' });
 
 export default Mensajes;

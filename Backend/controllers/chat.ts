@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { Server } from "socket.io";
-import { Op} from "sequelize";
+import { literal, Op } from "sequelize";
 import ChatRooms from "../models/chatRooms";
 import Mensajes from "../models/mensajes";
 import Usuarios from "../models/usuarios";
 
-
 interface MessageData {
-	roomID: string;
+	idchat: number;
+	id_usuario: number;
+	nombre_sala: string;
 	message: string;
 	tipo_usuario: string;
 	hour: string;
@@ -15,47 +16,35 @@ interface MessageData {
 
 export const socketHandler = (io: Server) => {
 	io.on("connection", async (socket) => {
-        // Set para almacenar las salas que ya han tenido un asesor unido
-        const roomsWithAsesor = new Set();
+		// Set para almacenar las salas que ya han tenido un asesor unido
+		const roomsWithAsesor = new Set();
 
-        // Crear usuario
-        socket.on("createUser", async (userName: string) => {
-            try {
-				// Insertar usuario en la base de datos
-				const user = await Usuarios.create({
-					nombre: userName,
+		// Mostrar lista de usuarios en espera
+		socket.on("waitingRoom", async () => {
+			try {
+				// Obtener los mensajes más recientes de cada sala
+				const chatUsers = await Mensajes.findAll({
+					include: [
+						{
+							model: ChatRooms,
+							attributes: ["id_chat", "nombre_sala", "estado"],
+						},
+					],
+					attributes: ["mensaje", "hour"],
+					where: {
+						id_mensaje: {
+							[Op.in]: literal(`
+								(SELECT MAX(id_mensaje) FROM mensajes GROUP BY id_chat)
+						`),
+						},
+					},
+					order: [["id_chat", "ASC"]], // Orden por id_chat
 				});
-				// Se crea una sala de chat para el usuario
-				const createdChatRoom = await ChatRooms.create({
-					id_usuario: user.id_usuario,
-					nombre_sala: userName,
-				});
-				socket.emit("userCreated", { result: createdChatRoom });
-
-				// Buscar el usuario creado en la bd
-				const userCreated = await ChatRooms.findOne({
-					where: { id_chat: createdChatRoom.id_chat },
-				});
-				// Notificar a los asesores sobre el nuevo usuario
-				io.emit("newUser", { Chats: userCreated });
-				
-            } catch (e) {
-                console.log(e);
-            }
-        });
-
-
-        // Mostrar lista de usuarios en espera
-        socket.on("waitingRoom", async () => {
-            try {
-                const chatUsers = await ChatRooms.findAll();
-                socket.emit("listUsers", {Chats:chatUsers});
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        );
-
+				socket.emit("listUsers", { Chats: chatUsers });
+			} catch (error) {
+				console.log(error);
+			}
+		});
 
 		// Unir a la sala
 		socket.on("joinRoom", async (roomID) => {
@@ -77,33 +66,84 @@ export const socketHandler = (io: Server) => {
 				}
 			);
 
-             // Solo emitir "joinAsesor" si la sala no está en el set
-            if (!roomsWithAsesor.has(roomID)) {
-                socket.to(roomID).emit("joinAsesor", {msg: "Un asesor se ha unido a la sala"});
-                // Añadir la sala al set para que no vuelva a emitir el mensaje
-                roomsWithAsesor.add(roomID); 
-            }
+			// Solo emitir "joinAsesor" si la sala no está en el set
+			if (!roomsWithAsesor.has(roomID)) {
+				socket.to(roomID).emit("joinAsesor", {
+					msg: "Un asesor se ha unido a la sala",
+				});
+				// Añadir la sala al set para que no vuelva a emitir el mensaje
+				roomsWithAsesor.add(roomID);
+			}
 		});
 
 		// Enviar mensaje a la sala
 		socket.on("sendMessage", async (data: MessageData) => {
 			try {
 				const datas = {
+					id_chat: data.idchat,
+					id_usuario: data.id_usuario,
+					nombre_sala: data.nombre_sala,
+
 					message: data.message,
 					tipo_usuario: data.tipo_usuario,
 					hour: data.hour,
 				};
-				const id_chat = Number(data.roomID);
-				await Mensajes.create({
-					id_chat: id_chat,
-					mensaje: data.message,
-					tipo_usuario: data.tipo_usuario,
-					hour: data.hour,
-				});
 
-				socket
-					.to(data.roomID)
-					.emit("receiveMessage", datas);
+				const findUser = await ChatRooms.findOne({
+					where: {
+						[Op.or]: [
+							{ id_usuario: datas.id_usuario },
+							{ id_chat: datas.id_chat },
+						],
+					},
+				});
+				// Si existe el usuario se guardan los mensajes
+				if (findUser) {
+					const id_chat = findUser.id_chat;
+					await Mensajes.create({
+						id_chat: id_chat,
+						mensaje: data.message,
+						tipo_usuario: data.tipo_usuario,
+						hour: data.hour,
+					});
+
+					socket.to(id_chat.toString()).emit("receiveMessage", datas);
+				} else {
+					// Si no existe se crea una sala de chat para el usuario
+					const createdChatRoom = await ChatRooms.create({
+						id_usuario: datas.id_usuario,
+						nombre_sala: datas.nombre_sala,
+					});
+					const id_chat = createdChatRoom.id_chat;
+					socket.join(id_chat.toString());
+					socket.emit("roomID", id_chat.toString());
+					await Mensajes.create({
+						id_chat: id_chat,
+						mensaje: data.message,
+						tipo_usuario: data.tipo_usuario,
+						hour: data.hour,
+					});
+
+					const userCreated = await Mensajes.findOne({
+						include: [
+							{
+								model: ChatRooms,
+								attributes: [
+									"id_chat",
+									"nombre_sala",
+									"estado",
+								],
+								where: { id_chat: id_chat },
+							},
+						],
+						attributes: ["mensaje", "hour"],
+						order: [["id_mensaje", "DESC"]],
+						limit: 1, // último mensaje
+					});
+
+					// Notificar a los asesores sobre el nuevo usuario
+					io.emit("newUser", { Chats: userCreated });
+				}
 			} catch (e) {
 				console.log("Error al enviar mensaje:", e);
 			}
@@ -142,7 +182,7 @@ export const socketHandler = (io: Server) => {
 						message: result.mensaje,
 						id_mensaje: result.id_mensaje,
 						tipo_usuario: result.tipo_usuario,
-                        hour: result.hour,
+						hour: result.hour,
 					});
 				});
 			} catch (e) {
@@ -152,27 +192,17 @@ export const socketHandler = (io: Server) => {
 	});
 };
 
+// Crear usuario
 export const createUser = async (req: Request, res: Response) => {
 	// Guardar en la bd el nombre del usuario y devolver el id de la sala de chat
 	try {
 		const { userName } = req.body;
-		const [user] = await Usuarios.findOrCreate({
-			where: { nombre: userName },
+		const createdUser = await Usuarios.create({
+			nombre: userName,
 		});
-
-		const existUserInChatRoom = await ChatRooms.findOne({
-			where: { id_usuario: user.id_usuario },
-		});
-		if (existUserInChatRoom) {
-			return res.status(200).json({ result: existUserInChatRoom });
-		} else {
-			const createdChatRoom = await ChatRooms.create({
-				id_usuario: user.id_usuario,
-				nombre_sala: userName,
-			});
-			return res.status(200).json({ result: createdChatRoom });
-		}
+		return res.status(200).json({ result: createdUser });
 	} catch (e) {
 		res.status(500).json({ msg: "Error interno del servidor" });
 	}
 };
+
