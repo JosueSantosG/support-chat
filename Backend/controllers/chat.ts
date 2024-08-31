@@ -4,6 +4,8 @@ import { literal, Op } from "sequelize";
 import ChatRooms from "../models/chatRooms";
 import Mensajes from "../models/mensajes";
 import Usuarios from "../models/usuarios";
+import db from "../database/connection";
+var cron = require("node-cron");
 
 interface MessageData {
 	idchat: number;
@@ -206,3 +208,24 @@ export const createUser = async (req: Request, res: Response) => {
 	}
 };
 
+// Función para borrar todos los datos de la BD
+async function deleteAllData() {
+	try {
+		// Desactivar verificación de claves foráneas
+		await db.query("SET FOREIGN_KEY_CHECKS = 0;", { raw: true });
+		await Usuarios.destroy({ truncate: true });
+		await ChatRooms.destroy({ truncate: true });
+		await Mensajes.destroy({ truncate: true });
+		// Reactivar verificación de claves foráneas
+		await db.query("SET FOREIGN_KEY_CHECKS = 1;", { raw: true });
+		console.log("Datos eliminados correctamente.");
+	} catch (error) {
+		console.error("Error al eliminar los datos:", error);
+	}
+}
+
+// Se ejecutará todos los días a las 00:00
+cron.schedule("0 0 * * *", () => {
+	console.log("Ejecutando limpieza diaria de datos...");
+	deleteAllData();
+});
