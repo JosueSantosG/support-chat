@@ -51,7 +51,6 @@ export class ClienteService {
             userName: this.socket.auth.userName,
             id_chat: this.socket.auth.id_chat,
         });
-        console.log({ ...data});
         
         this.socket.io.on('roomID', (roomID: string) => {
             sessionStorage.setItem('id_chat', roomID);

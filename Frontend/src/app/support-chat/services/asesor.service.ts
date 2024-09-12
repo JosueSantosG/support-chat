@@ -48,7 +48,6 @@ export class AsesorService {
         const newUser = ChatxMens.chatxMens(data.Chats);
         // Se actualiza la lista de clientes agregando el nuevo usuario
         this.clientes.set([...this.clientes(), newUser]);
-        console.log(newUser);
       });
     });
   }

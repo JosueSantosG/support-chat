@@ -130,7 +130,6 @@ private MsgJoinAsesor() {
         setTimeout(() => {
             try {
                 if (!this.chatScrollContainer?.nativeElement) {
-                    //console.log('El contenedor de scroll no está definido.');
                     return;
                 }
 
@@ -142,9 +141,7 @@ private MsgJoinAsesor() {
 
                 if (userMessages.length > 0) {
                     userMessages[userMessages.length - 1].scrollIntoView();
-                } else {
-                    //console.log('No hay mensajes del cliente para desplazar.');
-                }
+                } 
             } catch (err) {
                 console.error(
                     'Error al desplazar el scroll hacia el mensaje del usuario:',
